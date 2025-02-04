@@ -37,7 +37,7 @@ jobs:
       - run: LDFLAGS=-fsanitize=address CFLAGS=-fsanitize=address make -j$(nproc)
       - run: ./codec_unittest
       # Upload artifacts
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: asan-artifacts
           path: codec_unittest
@@ -58,7 +58,7 @@ jobs:
         run: ./AutoBuildForWindows.bat
       - run: ./bin/Win32/Release/codec_unittest.exe
       # Upload artifacts
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: windows-artifacts
           path: bin
@@ -90,7 +90,7 @@ jobs:
       - run: ninja -C builddir -v
       - run: meson test -C builddir -v
       # Upload artifacts
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: mingw-artifacts
           path: builddir
@@ -110,7 +110,7 @@ jobs:
       - run: ninja -C builddir -v
       - run: meson test -C builddir -v
       # Upload artifacts
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: macos-artifacts
           path: builddir
