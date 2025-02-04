@@ -1,5 +1,5 @@
 project('openh264', ['c', 'cpp'],
-  version : '2.4.1',
+  version : '2.5.0',
   meson_version : '>= 0.52',
   default_options : [ 'warning_level=1',
                       'buildtype=debugoptimized' ])
@@ -41,8 +41,6 @@ cpu_family = host_machine.cpu_family()
 
 supported_arguments = cpp.get_supported_arguments([
   '-Wno-non-virtual-dtor',
-  '-Wno-class-memaccess',
-  '-Werror',
   '-Wunused-but-set-variable',
   '-Wno-strict-aliasing'])
 
@@ -68,7 +66,7 @@ if ['linux', 'android', 'ios', 'darwin'].contains(system)
   endif
   if cpu_family == 'x86'
     asm_format = asm_format32
-    asm_args += ['-DX86_32', '-DHAVE_AVX2']
+    asm_args += ['-DX86_32', '-DX86_32_PICASM', '-DHAVE_AVX2']
     add_project_arguments('-DHAVE_AVX2', language: 'cpp')
     add_project_arguments('-DHAVE_AVX2', '-DX86_ASM', '-DX86_32_ASM', language: 'c')
     asm_inc = join_paths(meson.current_source_dir(), 'codec', 'common', 'x86', '')
@@ -99,7 +97,13 @@ if ['linux', 'android', 'ios', 'darwin'].contains(system)
     add_project_arguments('-DHAVE_LSX', '-DHAVE_LASX', language: 'cpp')
     casm_inc = include_directories(join_paths('codec', 'common', 'loongarch'))
   elif cpu_family == 'riscv64'
-    # We dont't have riscv64-specific optimization for now.
+    # We don't have riscv64-specific optimization for now.
+    asm_format = asm_format64
+  elif cpu_family == 'ppc'
+    # We don't have powerpc-specific optimization for now.
+    asm_format = asm_format32
+  elif cpu_family == 'ppc64'
+    # We don't have powerpc64-specific optimization for now.
     asm_format = asm_format64
   else
     error('FIXME: unhandled CPU family @0@ for @1@'.format(cpu_family, system))
